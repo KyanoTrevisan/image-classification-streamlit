@@ -67,7 +67,6 @@ def load_images_from_directory(base_path, categories, target_size=(224, 224)):
 
 def main():
     st.title("Image Classification App")
-    st.sidebar.header('Settings')
 
     # Image Downloading Section
     st.header("Image Downloading")
