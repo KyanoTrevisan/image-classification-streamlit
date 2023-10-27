@@ -9,6 +9,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sns
+import pandas as pd
 
 def download_images(category, num_images, st_progress, st_text):
     headers = {
@@ -66,6 +67,7 @@ def main():
     # Image Downloading Section
     st.header("Image Downloading")
     categories_input = st.text_input("Enter categories (comma separated):")
+    st.text("Recommended categories: Chickens, Dogs, Fish, Horses, Monkeys")
     num_images = st.number_input("Number of images per category:", min_value=1, value=100)
     
     if st.button("Download Images"):
@@ -84,7 +86,7 @@ def main():
 
     # Image Loading Section
     st.header("Load Images")
-    base_path = st.text_input("Enter the base directory path:")
+    base_path = "./"  # Set the base directory path directly
     categories_to_load = st.multiselect("Select categories to load:", os.listdir(base_path) if base_path else [])
     loaded_images, loaded_labels = load_images_from_directory(base_path, categories_to_load) if base_path and categories_to_load else ([], [])
 
