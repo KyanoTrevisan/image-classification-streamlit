@@ -1,20 +1,19 @@
-import streamlit as st
-import numpy as np
-import os
-from PIL import Image
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+import os
+from PIL import Image
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report, confusion_matrix
 import tensorflow as tf
+from tensorflow.keras.utils import to_categorical
 from tensorflow.keras import layers, models
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sns
-import pandas as pd
 import random
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from tensorflow.keras.utils import to_categorical
-
+import pandas as pd
 
 def download_images(category, num_images, st_progress, st_text):
     headers = {
