@@ -14,6 +14,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sns
 import random
 import pandas as pd
+import streamlit as st
 
 def download_images(category, num_images, st_progress, st_text):
     headers = {
