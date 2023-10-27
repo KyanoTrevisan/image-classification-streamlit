@@ -10,6 +10,11 @@ from tensorflow.keras import layers, models
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sns
 import pandas as pd
+import random
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from tensorflow.keras.utils import to_categorical
+
 
 def download_images(category, num_images, st_progress, st_text):
     headers = {
