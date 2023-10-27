@@ -107,11 +107,19 @@ def main():
         st.bar_chart(label_series.value_counts())
 
         st.subheader("Sample Images")
-        num_samples = st.slider("Number of sample images to display:", min_value=1, max_value=10, value=5)
-        sample_images, sample_labels = zip(*random.sample(list(zip(loaded_images, loaded_labels)), num_samples))
+        num_samples = st.slider("Number of sample images to display:", min_value=1, max_value=min(10, len(loaded_images)), value=5)
+        sampled_data = random.sample(list(zip(loaded_images, loaded_labels)), num_samples)
+        
+        sample_images = [Image.fromarray(img) if isinstance(img, np.ndarray) else img for img, _ in sampled_data]
+        sample_labels = [label for _, label in sampled_data]
+        
+        for img in sample_images:
+            img.format = "PNG"  # Ensure the format attribute is set
+        
         st.image(sample_images, caption=sample_labels, width=100)
     else:
         st.write("No images loaded. Please load images in the 'Load Images' section.")
+
 
     # Model Training Section
     st.header("Model Training")
