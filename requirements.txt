@@ -1,5 +1,6 @@
 numpy
+pandas
+pillow
 requests
 beautifulsoup4
 tensorflow
-seaborn
