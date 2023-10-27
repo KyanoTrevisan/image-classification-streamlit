@@ -66,7 +66,7 @@ def main():
     # Image Downloading Section
     st.header("Image Downloading")
     categories_input = st.text_input("Enter categories (comma separated):")
-    num_images = st.number_input("Number of images per category:", min_value=1, value=5)
+    num_images = st.number_input("Number of images per category:", min_value=1, value=100)
     
     if st.button("Download Images"):
         categories = [category.strip() for category in categories_input.split(",") if category]
@@ -92,9 +92,61 @@ def main():
     if loaded_images:
         st.image(loaded_images[0], caption="Sample Image", width=300)
 
-    # EDA and Model Training Section (Placeholder)
-    st.header("EDA and Model Training")
-    st.text("This section is a placeholder for EDA and model training.")
+# EDA Section
+    st.header("Exploratory Data Analysis (EDA)")
+
+    if loaded_images:
+        st.subheader("Data Distribution")
+        label_series = pd.Series(loaded_labels)
+        st.bar_chart(label_series.value_counts())
+
+        st.subheader("Sample Images")
+        num_samples = st.slider("Number of sample images to display:", min_value=1, max_value=10, value=5)
+        sample_images, sample_labels = zip(*random.sample(list(zip(loaded_images, loaded_labels)), num_samples))
+        st.image(sample_images, caption=sample_labels, width=100)
+    else:
+        st.write("No images loaded. Please load images in the 'Load Images' section.")
+
+# Model Training Section
+st.header("Model Training")
+
+if loaded_images:
+    st.subheader("Training Settings")
+    epochs = st.slider("Number of epochs:", min_value=1, max_value=100, value=10)
+    batch_size = st.slider("Batch size:", min_value=1, max_value=100, value=32)
+
+    if st.button("Train Model"):
+        with st.spinner('Training in progress...'):
+            # Convert images and labels to numpy arrays
+            X = np.array(loaded_images)
+            y = LabelEncoder().fit_transform(loaded_labels)
+            y = to_categorical(y)
+
+            # Split the data
+            X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
+
+            # Define a simple CNN model
+            model = models.Sequential([
+                layers.Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)),
+                layers.MaxPooling2D((2, 2)),
+                layers.Conv2D(64, (3, 3), activation='relu'),
+                layers.MaxPooling2D((2, 2)),
+                layers.Conv2D(64, (3, 3), activation='relu'),
+                layers.Flatten(),
+                layers.Dense(64, activation='relu'),
+                layers.Dense(y.shape[1], activation='softmax')
+            ])
+            model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+            # Train the model
+            history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(X_val, y_val))
+
+            # Display training results
+            st.subheader("Training Results")
+            st.line_chart(pd.DataFrame(history.history))
+else:
+    st.write("No images loaded. Please load images in the 'Load Images' section.")
+
 
 if __name__ == "__main__":
     main()
