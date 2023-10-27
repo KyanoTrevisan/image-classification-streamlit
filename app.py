@@ -131,8 +131,8 @@ def main():
         if st.button("Train Model"):
             with st.spinner('Training in progress...'):
                 # Ensure all images are RGB and have the same shape
-                loaded_images_rgb = [img.convert("RGB") for img in loaded_images]
-                X = np.stack(loaded_images_rgb, axis=0)
+                loaded_images_rgb = [Image.fromarray(img).convert("RGB") if isinstance(img, np.ndarray) else img.convert("RGB") for img in loaded_images]
+                X = np.stack([np.array(img) for img in loaded_images_rgb], axis=0)
                 
                 # Convert labels to numerical format
                 y = LabelEncoder().fit_transform(loaded_labels)
